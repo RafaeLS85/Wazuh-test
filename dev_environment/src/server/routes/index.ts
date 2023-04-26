@@ -1,11 +1,13 @@
 import { IRouter } from "../../../../src/core/server";
 import { schema } from "@osd/config-schema";
 import { TODO_PLUGIN_ROUTES } from "../../common";
+import { search } from "./search";
 
 export function defineRoutes(router: IRouter) {
   const INDEX_PATTERN = "todo-index";
   const { CREATE, UPDATE, GET, DELETE } = TODO_PLUGIN_ROUTES;
- 
+
+  //create todo item:
   router.post(
     {
       path: CREATE,
@@ -69,7 +71,51 @@ export function defineRoutes(router: IRouter) {
     }
   );
 
-  
+  //get all items
+  router.get(
+    {
+      path: GET,
+      validate: false,
+    },
+    async (context, request, response) => {
+      const query = {
+        query: {
+          match_all: {},
+        },
+      };
+
+      return search({ context, query, index: INDEX_PATTERN, response });
+    }
+  );
+
+  //search items
+  router.get(
+    {
+      path: `${GET}/{title}`,
+      validate: {
+        params: schema.object({
+          title: schema.string(),
+        }),
+      },
+    },
+    async (context, request, response) => {
+      if (!request.params.title) {
+        return response.notFound();
+      }
+
+      const query = {
+        query: {
+          match: {
+            title: {
+              query: request.params.title,
+            },
+          },
+        },
+      };
+
+      return search({ context, query, index: INDEX_PATTERN, response });
+    }
+  );
 
   //-----------------------------------search a document
   // var query = {

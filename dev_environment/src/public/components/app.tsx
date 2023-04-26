@@ -40,8 +40,36 @@ export const CustomPluginApp = ({
   const onClickHandler = () => {
     // Use the core http service to make a response to the server API.
 
-    const body = {id: '1', title: 'test', completed: false}
+    const body = {id: '3', title: 'learn python', completed: false}
     http.post(TODO_PLUGIN_ROUTES.CREATE, { body: JSON.stringify(body) }).then((res) => {
+      console.log({res})
+      // Use the core notifications service to display a success message.
+      notifications.toasts.addSuccess(
+        i18n.translate('customPlugin.dataUpdated', {
+          defaultMessage: 'Data updated',
+        })
+      );
+    });
+  };
+  const onClickHandler2 = () => {
+    // Use the core http service to make a response to the server API.
+
+    http.get(TODO_PLUGIN_ROUTES.GET).then((res) => {
+      console.log({res})
+      // Use the core notifications service to display a success message.
+      notifications.toasts.addSuccess(
+        i18n.translate('customPlugin.dataUpdated', {
+          defaultMessage: 'Data updated',
+        })
+      );
+    });
+  };
+
+  const onClickHandler3 = () => {
+    // Use the core http service to make a response to the server API.
+
+    const title = "python"
+    http.get(`${TODO_PLUGIN_ROUTES.GET}/${title}`).then((res) => {
       console.log({res})
       // Use the core notifications service to display a success message.
       notifications.toasts.addSuccess(
@@ -104,7 +132,13 @@ export const CustomPluginApp = ({
                       />
                     </p>
                     <EuiButton type="primary" size="s" onClick={onClickHandler}>
-                      <FormattedMessage id="customPlugin.buttonText" defaultMessage="Get data" />
+                      <FormattedMessage id="customPlugin.buttonText" defaultMessage="POST" />
+                    </EuiButton>
+                    <EuiButton type="primary" size="s" onClick={onClickHandler2}>
+                      <FormattedMessage id="customPlugin.buttonText" defaultMessage="GET" />
+                    </EuiButton>
+                    <EuiButton type="primary" size="s" onClick={onClickHandler3}>
+                      <FormattedMessage id="customPlugin.buttonText" defaultMessage="GET By Name" />
                     </EuiButton>
                   </EuiText>
                 </EuiPageContentBody>
