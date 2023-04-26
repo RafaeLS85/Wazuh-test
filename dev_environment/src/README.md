@@ -1,22 +1,36 @@
-# custom_plugin
+## Developer examples
 
-A OpenSearch Dashboards plugin
+Owner: OpenSearch Dashboards application architecture team
 
----
+The developer examples app is a landing page where developers go to search for working, tested examples of various developer 
+services. Add your a link to your example using the developerExamples `register` function offered on the `setup` contract:
 
-## Development
+```ts
+  setup(core, { developerExamples }) {
+    developerExamples.register({
+      appId: 'myFooExampleApp',
+      title: 'Foo services',
+      description: `Foo services let you do bar and zed.`,
+      links: [
+        {
+          label: 'README',
+          href: 'https://github.com/opensearch-project/OpenSearch-Dashboards/tree/main/src/plugins/foo/README.md',
+          iconType: 'logoGithub',
+          target: '_blank',
+          size: 's',
+        },
+      ],
+      image: img,
+    });
+  }
+```
 
-See the [OpenSearch Dashboards contributing
-guide](https://github.com/opensearch-project/OpenSearch-Dashboards/blob/main/CONTRIBUTING.md) for instructions
-setting up your development environment.
+Run OpenSearch Dashboards with developer examples via:
 
-    ## Scripts
-    <dl>
-      <dt><code>yarn osd bootstrap</code></dt>
-      <dd>Execute this to install node_modules and setup the dependencies in your plugin and in OpenSearch Dashboards
-      </dd>
+```
+yarn start --run-examples
+```
 
-      <dt><code>yarn plugin-helpers build</code></dt>
-      <dd>Execute this to create a distributable version of this plugin that can be installed in OpenSearch Dashboards
-      </dd>
-    </dl>
+Then navigate to "Developer examples":
+
+<img src="./navigation.png" height="400px" />

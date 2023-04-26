@@ -19,7 +19,7 @@ import {
 import { CoreStart } from '../../../../src/core/public';
 import { NavigationPublicPluginStart } from '../../../../src/plugins/navigation/public';
 
-import { PLUGIN_ID, PLUGIN_NAME } from '../../common';
+import { PLUGIN_ID, PLUGIN_NAME, TODO_PLUGIN_ROUTES } from '../../common';
 
 interface CustomPluginAppDeps {
   basename: string;
@@ -39,8 +39,10 @@ export const CustomPluginApp = ({
 
   const onClickHandler = () => {
     // Use the core http service to make a response to the server API.
-    http.get('/api/custom_plugin/example').then((res) => {
-      setTimestamp(res.time);
+
+    const body = {id: '1', title: 'test', completed: false}
+    http.post(TODO_PLUGIN_ROUTES.CREATE, { body: JSON.stringify(body) }).then((res) => {
+      console.log({res})
       // Use the core notifications service to display a success message.
       notifications.toasts.addSuccess(
         i18n.translate('customPlugin.dataUpdated', {
@@ -97,8 +99,8 @@ export const CustomPluginApp = ({
                     <p>
                       <FormattedMessage
                         id="customPlugin.timestampText"
-                        defaultMessage="Last timestamp: {time}"
-                        values={{ time: timestamp ? timestamp : 'Unknown' }}
+                        defaultMessage="Last timestamp: {todo_items}"
+                        values={{ todo_items: timestamp ? timestamp : 'Unknown' }}
                       />
                     </p>
                     <EuiButton type="primary" size="s" onClick={onClickHandler}>
