@@ -21,12 +21,12 @@ export const fetchTodos = async (): Promise<Todo[]> => {
 }
 
 export const updateTodos = async ({ todos }: { todos: TodoList }): Promise<boolean> => {
-  console.log(import.meta.env.VITE_API_BIN_KEY)
+  console.log('import.meta.env.VITE_API_BIN_KEY')
   const res = await fetch(API_URL, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      'X-Master-Key': import.meta.env.VITE_API_BIN_KEY
+      'X-Master-Key': 'import.meta.env.VITE_API_BIN_KEY'
     },
     body: JSON.stringify(todos)
   })

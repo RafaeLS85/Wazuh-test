@@ -71,6 +71,24 @@ export function defineRoutes(router: IRouter) {
     }
   );
 
+
+  //update document
+  router.post(
+    {
+      path: `${UPDATE}/{id}`,
+      validate: {
+        params: schema.object({
+          id: schema.string(),
+        }),
+      },
+    },
+    async (context, request, response) => {
+        return response.ok()
+    }
+  )
+
+
+
   //get all items
   router.get(
     {
@@ -117,77 +135,24 @@ export function defineRoutes(router: IRouter) {
     }
   );
 
-  //-----------------------------------search a document
-  // var query = {
-  //   query: {
-  //     match: {
-  //       title: {
-  //         query: "The Outsider",
-  //       },
-  //     },
-  //   },
-  // };
-
-  // var response = await client.search({
-  //   index: index_name,
-  //   body: query,
-  // });
-  //-----------------------------------------------------
-
-  //----------------------------------delete a document:
-  // var response = await client.delete({
-  //   index: index_name,
-  //   id: id,
-  // });
-  //-----------------------------------------------------
-
-  // router.post(
-  //   {
-  //     path: CREATE,
-  //     validate: {
-  //       body: schema.object({
-  //         id: schema.maybe(schema.string()),
-  //         title: schema.maybe(schema.string()),
-  //         completed: schema.maybe(schema.boolean()),
-  //       }),
-  //     },
-  //   },
-  //   async (context, request, response) => {
-  //     // si no existe el indice lo crea:
-
-  //     console.log({context})
-  //     console.log({request})
-  //     console.log({response})
-  //     const existsIndex =
-  //       await context.core.opensearch.client.asCurrentUser.indices.exists({
-  //         index: INDEX_PATTERN,
-  //       });
-
-  //     if (existsIndex.body) {
-  //       console.log('The index already exist')
-  //       return response.badRequest({
-  //         body: `Message with id ${request.params.id} already exists`,
-  //       });
-  //     }
-
-  //     console.log('no encuentra el indice...', {existsIndex})
-
-  //     const responseItems =
-  //       await context.core.opensearch.client.asCurrentUser.indices.create({
-  //         index: INDEX_PATTERN,
-  //         body: {
-  //           id: request.params.id,
-  //           title: request.params.title,
-  //           completed: request.params.completed,
-  //         },
-  //       });
-  //     return response.ok({
-  //       body: {
-  //         id: responseItems.body.id,
-  //         title: responseItems.body.title,
-  //         completed: responseItems.body.completed,
-  //       },
-  //     });
-  //   }
-  // );
+  router.delete(
+    {
+      path: DELETE,
+      validate: {
+        body: schema.object({
+          id: schema.maybe(schema.string()),
+        }),
+      }
+    },
+    async (context, request, response) => {
+      const deleteDocumentResponse =
+        await context.core.opensearch.client.asCurrentUser.delete({
+          index: INDEX_PATTERN,
+          id: request.body.id,
+        });
+      return response.ok({
+        body: deleteDocumentResponse.body,
+      });
+    }
+  )
 }

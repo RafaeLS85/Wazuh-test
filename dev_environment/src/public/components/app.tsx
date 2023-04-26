@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { i18n } from '@osd/i18n';
 import { FormattedMessage, I18nProvider } from '@osd/i18n/react';
 import { BrowserRouter as Router } from 'react-router-dom';
-
+import { DashboardContainerInput, DashboardStart } from '../../../../src/plugins/dashboard/public';
 import {
   EuiButton,
   EuiHorizontalRule,
@@ -18,8 +18,10 @@ import {
 
 import { CoreStart } from '../../../../src/core/public';
 import { NavigationPublicPluginStart } from '../../../../src/plugins/navigation/public';
-
 import { PLUGIN_ID, PLUGIN_NAME, TODO_PLUGIN_ROUTES } from '../../common';
+import { useTodos } from '../../hooks/useTodos'
+import TodoApp from './todo-app';
+
 
 interface CustomPluginAppDeps {
   basename: string;
@@ -27,6 +29,11 @@ interface CustomPluginAppDeps {
   http: CoreStart['http'];
   navigation: NavigationPublicPluginStart;
 }
+
+interface Props {
+  saveTodo: (title: string) => void
+}
+
 
 export const CustomPluginApp = ({
   basename,
@@ -36,6 +43,22 @@ export const CustomPluginApp = ({
 }: CustomPluginAppDeps) => {
   // Use React hooks to manage state.
   const [timestamp, setTimestamp] = useState<string | undefined>();
+
+  const {
+    activeCount,
+    completedCount,
+    filterSelected,
+    handleClearCompleted,
+    handleCompleted,
+    handleFilterChange,
+    handleRemove,
+    handleSave,
+    handleUpdateTitle,
+    todos: filteredTodos
+  } = useTodos()
+
+
+
 
   const onClickHandler = () => {
     // Use the core http service to make a response to the server API.
@@ -105,32 +128,12 @@ export const CustomPluginApp = ({
                 </EuiTitle>
               </EuiPageHeader>
               <EuiPageContent>
-                <EuiPageContentHeader>
-                  <EuiTitle>
-                    <h2>
-                      <FormattedMessage
-                        id="customPlugin.congratulationsTitle"
-                        defaultMessage="Congratulations, you have successfully created a new OpenSearch Dashboards Plugin!"
-                      />
-                    </h2>
-                  </EuiTitle>
-                </EuiPageContentHeader>
+                
                 <EuiPageContentBody>
-                  <EuiText>
-                    <p>
-                      <FormattedMessage
-                        id="customPlugin.content"
-                        defaultMessage="Look through the generated code and check out the plugin development documentation."
-                      />
-                    </p>
-                    <EuiHorizontalRule />
-                    <p>
-                      <FormattedMessage
-                        id="customPlugin.timestampText"
-                        defaultMessage="Last timestamp: {todo_items}"
-                        values={{ todo_items: timestamp ? timestamp : 'Unknown' }}
-                      />
-                    </p>
+                  
+                    
+                     
+                    
                     <EuiButton type="primary" size="s" onClick={onClickHandler}>
                       <FormattedMessage id="customPlugin.buttonText" defaultMessage="POST" />
                     </EuiButton>
@@ -140,7 +143,9 @@ export const CustomPluginApp = ({
                     <EuiButton type="primary" size="s" onClick={onClickHandler3}>
                       <FormattedMessage id="customPlugin.buttonText" defaultMessage="GET By Name" />
                     </EuiButton>
-                  </EuiText>
+                    
+                    <TodoApp />
+                  
                 </EuiPageContentBody>
               </EuiPageContent>
             </EuiPageBody>
