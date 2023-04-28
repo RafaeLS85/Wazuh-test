@@ -1,35 +1,78 @@
-import { type TodoList } from '../public/types'
+import { CoreStart } from "../../../../src/core/public";
+import { TODO_PLUGIN_ROUTES } from "../common";
+import { i18n } from "@osd/i18n";
 
-const API_URL = 'https://api.jsonbin.io/v3/b/63ff3a52ebd26539d087639c'
-
-interface Todo {
-  id: string
-  title: string
-  completed: boolean
-  order: number
+interface CustomPluginAppDeps {
+  notifications: CoreStart["notifications"];
+  http: CoreStart["http"];
 }
+export const TodoService = ({
+  http,
+  notifications,
+}: CustomPluginAppDeps): {
+  createTodo: any;
+  getAll: any;
+  getByName: any;
+  deleteTodo: any;
+  updateTodo: any;
+} => {
+  const createTodo = (title:string) => {
+    // create item
+    const body = { id: Math.random().toString()  , title, completed: false };
+    return http
+      .post(TODO_PLUGIN_ROUTES.CREATE, { body: JSON.stringify(body) })
+      .then((res) => {
+        console.log({ res });
+        // Use the core notifications service to display a success message.
+        notifications.toasts.addSuccess(
+          i18n.translate("customPlugin.dataCreated", {
+            defaultMessage: "Todo created",
+          })
+        );
+        return res
+      });
+  };
+  const getAll = () => {
+    // get all items
+    return http
+      .get(TODO_PLUGIN_ROUTES.GET)
+      .then(({ items }) => {
+        console.log({ items });
+        return items;
+        // Use the core notifications service to display a success message.
+      })
+      .catch((err) => console.log("getAll error", err));
+  };
 
-export const fetchTodos = async (): Promise<Todo[]> => {
-  const res = await fetch(API_URL)
-  if (!res.ok) {
-    console.error('Error fetching todos')
-    return []
-  }
+  const getByName = () => {
+    // get by name
+    const title = "python";
+    return http.get(`${TODO_PLUGIN_ROUTES.GET}/${title}`).then((res) => {
+      console.log({ res });
+    });
+  };
 
-  const { record: todos } = await res.json() as { record: Todo[] }
-  return todos
-}
+  const deleteTodo = () => {
+    return notifications.toasts.addSuccess(
+      i18n.translate("customPlugin.dataRemove", {
+        defaultMessage: "Todo deleted",
+      })
+    );
+  };
 
-export const updateTodos = async ({ todos }: { todos: TodoList }): Promise<boolean> => {
-  console.log('import.meta.env.VITE_API_BIN_KEY')
-  const res = await fetch(API_URL, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Master-Key': 'import.meta.env.VITE_API_BIN_KEY'
-    },
-    body: JSON.stringify(todos)
-  })
+  const updateTodo = () => {
+    return notifications.toasts.addSuccess(
+      i18n.translate("customPlugin.dataUpdated", {
+        defaultMessage: "Todo updated",
+      })
+    );
+  };
 
-  return res.ok
-}
+  return {
+    createTodo,
+    getAll,
+    getByName,
+    deleteTodo,
+    updateTodo,
+  };
+};

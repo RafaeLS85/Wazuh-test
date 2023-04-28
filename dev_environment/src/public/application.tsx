@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import { AppMountParameters, CoreStart } from '../../../src/core/public';
 import { AppPluginStartDependencies } from './types';
 import { CustomPluginApp } from './components/app';
-import 'todomvc-app-css/index.css'
 
 export const renderApp = (
   { notifications, http }: CoreStart,
