@@ -1,10 +1,10 @@
 import { IRouter } from "../../../../src/core/server";
 import { schema } from "@osd/config-schema";
-import { TODO_PLUGIN_ROUTES } from "../../common";
+import { INDEX_PATTERN, TODO_PLUGIN_ROUTES } from "../../common";
 import { search } from "./search";
 
 export function defineRoutes(router: IRouter) {
-  const INDEX_PATTERN = "todo-index";
+  
   const { CREATE, UPDATE, GET, DELETE } = TODO_PLUGIN_ROUTES;
 
   //create todo item:
@@ -135,6 +135,7 @@ export function defineRoutes(router: IRouter) {
     }
   );
 
+  // DELETE /todo-index/_doc/4
   router.delete(
     {
       path: DELETE,

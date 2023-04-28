@@ -18,3 +18,5 @@ export const TODO_PLUGIN_ROUTES = {
   GET: "/api/plugin/todo",
   DELETE: "/api/plugin/todo",
 };
+
+export const INDEX_PATTERN = "todo-index";

@@ -1,6 +1,7 @@
 import { CoreStart } from "../../../../src/core/public";
 import { TODO_PLUGIN_ROUTES } from "../common";
 import { i18n } from "@osd/i18n";
+import  randomIntFromInterval from './utils'
 
 interface CustomPluginAppDeps {
   notifications: CoreStart["notifications"];
@@ -10,15 +11,16 @@ export const TodoService = ({
   http,
   notifications,
 }: CustomPluginAppDeps): {
-  createTodo: any;
-  getAll: any;
-  getByName: any;
-  deleteTodo: any;
-  updateTodo: any;
+  createTodo: (title:string) => any;
+  getAll: () => any;
+  getByName: () => any;
+  deleteTodo: () => any;
+  updateTodo: () => any;
 } => {
   const createTodo = (title:string) => {
     // create item
-    const body = { id: Math.random().toString()  , title, completed: false };
+    const id = randomIntFromInterval(1, 9999).toString()
+    const body = { id, title, completed: false };
     return http
       .post(TODO_PLUGIN_ROUTES.CREATE, { body: JSON.stringify(body) })
       .then((res) => {
@@ -29,7 +31,7 @@ export const TodoService = ({
             defaultMessage: "Todo created",
           })
         );
-        return res
+        return {res, todo: body}
       });
   };
   const getAll = () => {

@@ -7,24 +7,19 @@ import { useTodos } from "../../../hooks/useTodos";
 interface CustomPluginAppDeps {
   notifications: CoreStart["notifications"];
   http: CoreStart["http"];
+  saveTodo: (title:string) => any
 }
 
-export default function Input({ http, notifications }: CustomPluginAppDeps) {
+export default function CreateTodo({ http, notifications, saveTodo }: CustomPluginAppDeps) {
   const [value, setValue] = useState("");
   
 
-  const { createTodo } = TodoService({ http, notifications });
+  // const { createTodo } = TodoService({ http, notifications });
 
   const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
     if (e.key === "Enter" && value !== "") {
-      createTodo(value);
-      setValue("");
-      setTimeout(() => {
-        const { getAll } = TodoService({http, notifications})
-        getAll().then(res =>  console.log(res))
-      }, 2000)
-      
-      
+      saveTodo(value);
+      setValue("");      
     }
   };
 

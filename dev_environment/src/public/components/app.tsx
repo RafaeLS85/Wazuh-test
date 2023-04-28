@@ -22,11 +22,10 @@ import {
 import { CoreStart } from "../../../../src/core/public";
 import { NavigationPublicPluginStart } from "../../../../src/plugins/navigation/public";
 import { PLUGIN_ID, PLUGIN_NAME } from "../../common";
-import TodoApp from "./todo/todo-app";
-import { TodoService } from '../../services/todos'
-import { useTodos } from '../../hooks/useTodos'
-import Input from "./todo/input";
-
+import Todos from "./todo/todos";
+import { TodoService } from "../../services/todos";
+import { useTodos } from "../../hooks/useTodos";
+import CreateTodo from "./todo/create-todo";
 
 interface CustomPluginAppDeps {
   basename: string;
@@ -39,13 +38,11 @@ export const CustomPluginApp = ({
   basename,
   navigation,
   http,
-  notifications
-
+  notifications,
 }: CustomPluginAppDeps) => {
   // Use React hooks to manage state.
- 
-  const { items } = useTodos(http, notifications)
- 
+
+  const { items, handleSave } = useTodos(http, notifications);
 
   // Render the application DOM.
   // Note that `navigation.ui.TopNavMenu` is a stateful component exported on the `navigation` plugin's start contract.
@@ -74,31 +71,24 @@ export const CustomPluginApp = ({
               <EuiPageContent>
                 <EuiPageContentBody>
                   
-                  {/* <EuiButton type="primary" size="s" onClick={onClickHandler}>
-                    <FormattedMessage
-                      id="customPlugin.buttonText"
-                      defaultMessage="POST"
-                    />
-                  </EuiButton> */}
                   {/* <EuiButton type="primary" size="s" onClick={getAll}>
                     <FormattedMessage
                       id="customPlugin.buttonText"
                       defaultMessage="GET"
                     />
                   </EuiButton> */}
-                  {/* <EuiButton type="primary" size="s" onClick={onClickHandler3}>
-                    <FormattedMessage
-                      id="customPlugin.buttonText"
-                      defaultMessage="GET By Name"
-                    />
-                  </EuiButton> */}
-
-                  <Input http={http} notifications={notifications}  />
-
-                   {!items && <p>Loading...</p> }
-
-                   {items && <TodoApp todos={items} />} 
                   
+                  {/* ---------todo-app----------- */}
+                  <CreateTodo
+                    http={http}
+                    notifications={notifications}
+                    saveTodo={handleSave}
+                  />
+
+                  {!items && <p>Loading...</p>}
+
+                  {items && <Todos todos={items} />}
+                  {/* ------------------------- */}
                 </EuiPageContentBody>
               </EuiPageContent>
             </EuiPageBody>
