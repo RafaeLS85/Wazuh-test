@@ -1,20 +1,12 @@
 import React, { useState } from "react";
 import { EuiFieldText } from "@elastic/eui";
-import { CoreStart } from "../../../../src/core/public";
-import { TodoService } from "../../../services/todos";
-import { useTodos } from "../../../hooks/useTodos";
 
-interface CustomPluginAppDeps {
-  notifications: CoreStart["notifications"];
-  http: CoreStart["http"];
+interface Props {
   saveTodo: (title:string) => any
 }
 
-export default function CreateTodo({ http, notifications, saveTodo }: CustomPluginAppDeps) {
+export default function CreateTodo({ saveTodo }: Props) {
   const [value, setValue] = useState("");
-  
-
-  // const { createTodo } = TodoService({ http, notifications });
 
   const handleKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (e) => {
     if (e.key === "Enter" && value !== "") {
@@ -25,7 +17,7 @@ export default function CreateTodo({ http, notifications, saveTodo }: CustomPlug
 
   return (
     <EuiFieldText
-      placeholder="Placeholder text"
+      placeholder="What do you want to do?"
       value={value}
       onChange={(e) => setValue(e.target.value)}
       onKeyDown={handleKeyDown}

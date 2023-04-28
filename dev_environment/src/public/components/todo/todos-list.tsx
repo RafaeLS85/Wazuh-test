@@ -1,13 +1,24 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-export default function TodoList({ todo_items }) {
-  console.log("todo_items, ", todo_items);
-
+export default function TodoList({ todo_items, hanldeDelete }) {
   return (
-    <ul>
-      {todo_items.map((item) => (
-        <li key={ Math.random()}>{item._source.title}</li>
-      ))}
-    </ul>
+    <div>
+      <ul>
+        {todo_items.map((item) => (
+          <li
+            key={Math.random()}
+            styles={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {item._source.title}
+
+            <button onClick={() => hanldeDelete(item._source.id)}> X </button>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

@@ -7,7 +7,6 @@ export function defineRoutes(router: IRouter) {
   
   const { CREATE, UPDATE, GET, DELETE } = TODO_PLUGIN_ROUTES;
 
-  //create todo item:
   router.post(
     {
       path: CREATE,
@@ -20,7 +19,6 @@ export function defineRoutes(router: IRouter) {
       },
     },
     async (context, request, response) => {
-      // si no existe el indice lo crea:
       const existsIndex =
         await context.core.opensearch.client.asCurrentUser.indices.exists({
           index: INDEX_PATTERN,
@@ -71,7 +69,6 @@ export function defineRoutes(router: IRouter) {
     }
   );
 
-
   //update document
   router.post(
     {
@@ -86,8 +83,6 @@ export function defineRoutes(router: IRouter) {
         return response.ok()
     }
   )
-
-
 
   //get all items
   router.get(
@@ -135,7 +130,6 @@ export function defineRoutes(router: IRouter) {
     }
   );
 
-  // DELETE /todo-index/_doc/4
   router.delete(
     {
       path: DELETE,

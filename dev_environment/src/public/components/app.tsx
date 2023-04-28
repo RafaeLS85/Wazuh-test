@@ -42,7 +42,7 @@ export const CustomPluginApp = ({
 }: CustomPluginAppDeps) => {
   // Use React hooks to manage state.
 
-  const { items, handleSave } = useTodos(http, notifications);
+  const { items, handleSave, handleDelete } = useTodos(http, notifications);
 
   // Render the application DOM.
   // Note that `navigation.ui.TopNavMenu` is a stateful component exported on the `navigation` plugin's start contract.
@@ -70,24 +70,10 @@ export const CustomPluginApp = ({
               </EuiPageHeader>
               <EuiPageContent>
                 <EuiPageContentBody>
-                  
-                  {/* <EuiButton type="primary" size="s" onClick={getAll}>
-                    <FormattedMessage
-                      id="customPlugin.buttonText"
-                      defaultMessage="GET"
-                    />
-                  </EuiButton> */}
-                  
                   {/* ---------todo-app----------- */}
-                  <CreateTodo
-                    http={http}
-                    notifications={notifications}
-                    saveTodo={handleSave}
-                  />
-
-                  {!items && <p>Loading...</p>}
-
-                  {items && <Todos todos={items} />}
+                  <CreateTodo saveTodo={handleSave} />
+                  {!items && <p>Loading...</p> }
+                  {items && <Todos todos={items} deleteTodo={handleDelete} />}
                   {/* ------------------------- */}
                 </EuiPageContentBody>
               </EuiPageContent>
