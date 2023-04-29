@@ -1,1 +1,16 @@
 /* stylelint-disable no-empty-source */
+li {
+    line-height: 2rem;
+}
+
+.completed {
+    text-decoration: line-through;
+    color: gray;
+    background-color: rgba(255, 0, 0, 0.2);
+}
+
+.todo {
+    background-color: hsla(120, 100%, 75%, 0.2);
+
+}
+

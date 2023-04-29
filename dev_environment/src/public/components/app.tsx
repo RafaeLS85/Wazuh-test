@@ -1,31 +1,24 @@
-import React, { useState, useEffect } from "react";
-import { i18n } from "@osd/i18n";
+import React from "react";
 import { FormattedMessage, I18nProvider } from "@osd/i18n/react";
 import { BrowserRouter as Router } from "react-router-dom";
 import {
-  DashboardContainerInput,
-  DashboardStart,
-} from "../../../../src/plugins/dashboard/public";
-import {
-  EuiButton,
-  EuiHorizontalRule,
   EuiPage,
   EuiPageBody,
   EuiPageContent,
   EuiPageContentBody,
-  EuiPageContentHeader,
   EuiPageHeader,
   EuiTitle,
-  EuiText,
+  EuiFlexGroup,
+  EuiFlexItem,
 } from "@elastic/eui";
-
 import { CoreStart } from "../../../../src/core/public";
 import { NavigationPublicPluginStart } from "../../../../src/plugins/navigation/public";
 import { PLUGIN_ID, PLUGIN_NAME } from "../../common";
 import Todos from "./todo/todos";
-import { TodoService } from "../../services/todos";
 import { useTodos } from "../../hooks/useTodos";
 import CreateTodo from "./todo/create-todo";
+import Loading from "./loading";
+import SearchTodo from "./todo/search-todo";
 
 interface CustomPluginAppDeps {
   basename: string;
@@ -40,12 +33,11 @@ export const CustomPluginApp = ({
   http,
   notifications,
 }: CustomPluginAppDeps) => {
-  // Use React hooks to manage state.
+  const { items, handleSave, handleDelete, handleComplete } = useTodos(
+    http,
+    notifications
+  );
 
-  const { items, handleSave, handleDelete } = useTodos(http, notifications);
-
-  // Render the application DOM.
-  // Note that `navigation.ui.TopNavMenu` is a stateful component exported on the `navigation` plugin's start contract.
   return (
     <Router basename={basename}>
       <I18nProvider>
@@ -70,11 +62,24 @@ export const CustomPluginApp = ({
               </EuiPageHeader>
               <EuiPageContent>
                 <EuiPageContentBody>
-                  {/* ---------todo-app----------- */}
-                  <CreateTodo saveTodo={handleSave} />
-                  {!items && <p>Loading...</p> }
-                  {items && <Todos todos={items} deleteTodo={handleDelete} />}
-                  {/* ------------------------- */}
+                  <EuiFlexGroup justifyContent="spaceAround">
+                    <EuiFlexItem grow={false}>
+                      <SearchTodo />
+                    </EuiFlexItem>
+                  </EuiFlexGroup>
+                  <EuiFlexGroup justifyContent="spaceAround">
+                    <EuiFlexItem grow={false}>
+                      <CreateTodo saveTodo={handleSave} />
+                      {!items && <Loading />}
+                      {items && (
+                        <Todos
+                          todos={items}
+                          deleteTodo={handleDelete}
+                          handleComplete={handleComplete}
+                        />
+                      )}
+                    </EuiFlexItem>
+                  </EuiFlexGroup>
                 </EuiPageContentBody>
               </EuiPageContent>
             </EuiPageBody>

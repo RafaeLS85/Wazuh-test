@@ -23,3 +23,38 @@ export type TodoTitle = Pick<Todo, "title">;
 export type FilterValue = (typeof TODO_FILTERS)[keyof typeof TODO_FILTERS];
 
 export type TodoList = Todo[];
+
+export interface TodoItem {
+  _index: string;
+  _id: string;
+  _score: number;
+  _source: Todo
+}
+
+export interface CreateTodoResponse {
+    res: Response;
+    todo: Todo;
+}
+export interface DeleteTodoResponse {
+    res: Response;
+    todoId: string;
+}
+
+interface Shards {
+  total: number;
+  successful: number;
+  failed: number
+}
+
+interface Response {
+  _index: string;
+  _id: string;
+  _version: number;
+  result: string;
+  forced_refresh: boolean;
+  _shards: Shards;
+  _seq_no: number;
+  _primary_term: number;
+}
+
+
